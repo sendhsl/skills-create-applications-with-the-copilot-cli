@@ -8,7 +8,10 @@ function printUsage() {
   console.log("  node src/calculator.js sub 10 4     # -> 6");
   console.log("  node src/calculator.js mul 2 3 4    # -> 24");
   console.log("  node src/calculator.js div 12 3     # -> 4");
-  console.log("Operators may also be symbols: + - * /");
+  console.log("  node src/calculator.js mod 10 3     # -> 1");
+  console.log("  node src/calculator.js pow 2 8      # -> 256");
+  console.log("  node src/calculator.js sqrt 16      # -> 4");
+  console.log("Operators may also be symbols: + - * / %");
 }
 
 // Core functions (exported for testing)
@@ -41,8 +44,47 @@ function doDiv(nums) {
 const addition = doAdd; // compatibility alias expected by external checks
 const multiplication = doMul; // compatibility alias expected by external checks
 
+// New utility functions requested in feature request
+function modulo(a, b) {
+  if (typeof a !== 'number' || typeof b !== 'number') {
+    throw new Error('modulo requires numeric arguments');
+  }
+  if (b === 0) {
+    throw new Error('Modulo by zero');
+  }
+  return a % b;
+}
+
+function power(base, exponent) {
+  if (typeof base !== 'number' || typeof exponent !== 'number') {
+    throw new Error('power requires numeric arguments');
+  }
+  return Math.pow(base, exponent);
+}
+
+function squareRoot(n) {
+  if (typeof n !== 'number') {
+    throw new Error('squareRoot requires a numeric argument');
+  }
+  if (n < 0) {
+    throw new Error('squareRoot of negative number');
+  }
+  return Math.sqrt(n);
+}
+
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { doAdd, doSub, doMul, doDiv, addition, multiplication, printUsage };
+  module.exports = {
+    doAdd,
+    doSub,
+    doMul,
+    doDiv,
+    addition,
+    multiplication,
+    modulo,
+    power,
+    squareRoot,
+    printUsage,
+  };
 }
 
 // CLI entrypoint - run only when executed directly
@@ -92,6 +134,21 @@ if (require.main === module) {
       case 'div':
       case '/':
         result = doDiv(operands);
+        break;
+      case 'mod':
+      case '%':
+        if (operands.length < 2) throw new Error('mod requires two operands');
+        result = modulo(operands[0], operands[1]);
+        break;
+      case 'pow':
+      case 'power':
+        if (operands.length < 2) throw new Error('power requires base and exponent');
+        result = power(operands[0], operands[1]);
+        break;
+      case 'sqrt':
+      case 'sqrt':
+        if (operands.length < 1) throw new Error('sqrt requires one operand');
+        result = squareRoot(operands[0]);
         break;
       case 'help':
       case '--help':
