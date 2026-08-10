@@ -1,0 +1,12 @@
+{
+  "name": "skills-create-applications-with-the-copilot-cli",
+  "version": "1.0.0",
+  "description": "Calculator CLI for skills exercise",
+  "main": "src/calculator.js",
+  "scripts": {
+    "test": "jest --colors"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
